@@ -325,4 +325,104 @@
         }
 
         function showResult() {
-            quizScreen.classList.ad
+            quizScreen.classList.add('hidden');
+            resultScreen.classList.remove('hidden');
+            
+            progressBar.style.width = '100%';
+
+            let maxScore = -1;
+            let resultType = '';
+            let isTie = false;
+            let tiedTypes = [];
+
+            for (const type in scores) {
+                if (scores[type] > maxScore) {
+                    maxScore = scores[type];
+                    resultType = type;
+                    isTie = false;
+                    tiedTypes = [type];
+                } else if (scores[type] === maxScore) {
+                    isTie = true;
+                    tiedTypes.push(type);
+                }
+            }
+            
+            if (isTie) {
+                resultType = tiedTypes[Math.floor(Math.random() * tiedTypes.length)];
+            }
+
+
+            const result = resultsData[resultType];
+            resultImage.src = result.image;
+            resultSubtitle.textContent = result.subtitle;
+            resultMainTitle.textContent = result.mainTitle;
+            resultDescription.textContent = result.description;
+            resultCat.textContent = result.cat;
+        }
+        
+        function retryQuiz() {
+            resultScreen.classList.add('hidden');
+            startScreen.classList.remove('hidden');
+            startScreen.classList.add('fade-in');
+        }
+
+        async function shareResult() {
+            const shareBtn = document.getElementById('share-btn');
+            const resultElement = document.getElementById('result-content');
+
+            shareBtn.disabled = true;
+            shareBtn.textContent = '공유 이미지 생성 중...';
+
+            try {
+                const canvas = await html2canvas(resultElement, {
+                    backgroundColor: "#1f2937",
+                    useCORS: true,
+                    scale: 2,
+                });
+
+                // 캔버스를 파일 객체로 변환
+                canvas.toBlob(async (blob) => {
+                    const file = new File([blob], "나의_집사유형_결과.png", { type: "image/png" });
+                    const shareData = {
+                        files: [file],
+                        title: '나의 매운맛 집사 유형은?',
+                        text: '과연 나는 어떤 유형의 집사일까? 지금 바로 확인해보세요!',
+                    };
+
+                    // Web Share API를 지원하는지 확인
+                    if (navigator.share && navigator.canShare(shareData)) {
+                        try {
+                            await navigator.share(shareData);
+                            shareBtn.textContent = '공유 완료!';
+                        } catch (err) {
+                            // 사용자가 공유를 취소한 경우
+                            console.log('Share was cancelled', err);
+                            shareBtn.textContent = '인스타그램에 공유하기';
+                        }
+                    } else {
+                        // 데스크탑 등 공유 기능을 지원하지 않는 경우, 다운로드로 대체
+                        alert('공유 기능을 지원하지 않는 환경입니다. 이미지를 다운로드합니다.');
+                        const imageURL = URL.createObjectURL(blob);
+                        const downloadLink = document.createElement('a');
+                        downloadLink.href = imageURL;
+                        downloadLink.download = '나의_집사유형_결과.png';
+                        document.body.appendChild(downloadLink);
+                        downloadLink.click();
+                        document.body.removeChild(downloadLink);
+                        URL.revokeObjectURL(imageURL);
+                    }
+                }, 'image/png');
+
+            } catch (err) {
+                console.error("이미지 변환 실패:", err);
+                alert("이미지 생성에 실패했습니다. 다시 시도해주세요.");
+            } finally {
+                shareBtn.disabled = false;
+                if(shareBtn.textContent.includes('...')) {
+                   shareBtn.textContent = '인스타그램에 공유하기';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
