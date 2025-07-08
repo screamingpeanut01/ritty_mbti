@@ -33,19 +33,19 @@
         }
     </style>
 </head>
-<body class="bg-gray-900 text-white flex items-center justify-center min-h-screen p-4">
+<body class="bg-violet-200 text-slate-800 flex items-center justify-center min-h-screen p-4">
 
-    <div id="app" class="w-full max-w-2xl mx-auto bg-gray-800 rounded-xl shadow-2xl p-6 md:p-10 text-center">
+    <div id="app" class="w-full max-w-2xl mx-auto bg-white rounded-xl shadow-2xl p-6 md:p-10 text-center">
 
         <!-- 시작 화면 -->
         <div id="start-screen" class="fade-in">
             <!-- 이미지 경로 수정 -->
-            <img src="images/main.png" alt="고양이 캐릭터 이미지" class="w-40 h-40 md:w-48 md:h-48 rounded-full object-cover mx-auto mb-6 shadow-lg border-4 border-red-400">
+            <img src="images/main.png" alt="고양이 캐릭터 이미지" class="w-40 h-40 md:w-48 md:h-48 rounded-full object-cover mx-auto mb-6 shadow-lg border-4 border-violet-400">
             
-            <h1 class="text-3xl md:text-4xl font-bold mb-2 text-red-400">매운맛 집사 유형 테스트</h1>
-            <p class="text-gray-300 mb-8">당신은 어떤 유형의 집사일까요?<br>솔직한 당신의 본능을 확인해보세요.</p>
+            <h1 class="text-3xl md:text-4xl font-bold mb-2 text-violet-600">매운맛 집사 유형 테스트</h1>
+            <p class="text-gray-600 mb-8">당신은 어떤 유형의 집사일까요?<br>솔직한 당신의 본능을 확인해보세요.</p>
             
-            <button id="start-btn" class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-4 rounded-lg text-lg transition-transform transform hover:scale-105">
+            <button id="start-btn" class="w-full bg-violet-500 hover:bg-violet-600 text-white font-bold py-3 px-4 rounded-lg text-lg transition-transform transform hover:scale-105">
                 테스트 시작하기
             </button>
         </div>
@@ -53,14 +53,15 @@
         <!-- 질문 화면 -->
         <div id="quiz-screen" class="hidden">
             <!-- 진행도 바 -->
-            <div class="w-full bg-gray-700 rounded-full h-2.5 mb-6">
-                <div id="progress-bar" class="bg-red-500 h-2.5 rounded-full progress-bar-inner" style="width: 0%"></div>
+            <div class="w-full bg-violet-100 rounded-full h-2.5 mb-6">
+                <div id="progress-bar" class="bg-violet-500 h-2.5 rounded-full progress-bar-inner" style="width: 0%"></div>
             </div>
             
             <div id="question-container" class="fade-in">
-                <p id="question-number" class="text-red-400 font-bold mb-2"></p>
-                <h2 id="question-text" class="text-xl md:text-2xl font-bold mb-8 min-h-[100px]"></h2>
-                <!-- 답변 버튼 레이아웃 변경: md:grid-cols-2 제거 -->
+                <p id="question-number" class="text-violet-500 font-bold mb-2"></p>
+                <h2 id="question-text" class="text-xl md:text-2xl font-bold mb-4 text-slate-900"></h2>
+                <!-- 질문 이미지 표시 영역 -->
+                <img id="question-image" src="" alt="Question visualization" class="w-full max-w-sm mx-auto h-auto object-cover rounded-lg mb-8 shadow-md">
                 <div id="answer-buttons" class="grid grid-cols-1 gap-4">
                     <!-- 답변 버튼이 여기에 동적으로 추가됩니다 -->
                 </div>
@@ -69,25 +70,25 @@
 
         <!-- 결과 화면 -->
         <div id="result-screen" class="hidden">
-            <div id="result-content" class="p-4 bg-gray-800">
+            <div id="result-content" class="p-4 bg-white">
                 <!-- 결과 이미지 추가 -->
                 <img id="result-image" src="" alt="결과 고양이 이미지" class="w-full h-auto object-cover rounded-lg mb-6 shadow-lg">
 
-                <p class="text-lg text-gray-400 mb-2">당신의 집사 유형은...</p>
+                <p class="text-lg text-gray-500 mb-2">당신의 집사 유형은...</p>
                 <!-- 타이틀 구조 변경 -->
                 <div class="mb-6">
-                    <p id="result-subtitle" class="text-xl md:text-2xl text-gray-300"></p>
-                    <h2 id="result-main-title" class="text-3xl md:text-4xl font-bold text-red-400"></h2>
+                    <p id="result-subtitle" class="text-xl md:text-2xl text-gray-700"></p>
+                    <h2 id="result-main-title" class="text-3xl md:text-4xl font-bold text-violet-600"></h2>
                 </div>
                 
-                <div class="bg-gray-700 p-6 rounded-lg text-left space-y-6">
+                <div class="bg-violet-50 p-6 rounded-lg text-left space-y-6">
                     <div>
-                        <h3 class="font-bold text-lg mb-2 text-red-300">🧐 집사 특징</h3>
-                        <p id="result-description" class="text-gray-300"></p>
+                        <h3 class="font-bold text-lg mb-2 text-violet-700">🧐 집사 특징</h3>
+                        <p id="result-description" class="text-gray-800"></p>
                     </div>
                     <div>
-                        <h3 class="font-bold text-lg mb-2 text-red-300">😻 추천 고양이 유형</h3>
-                        <p id="result-cat" class="text-gray-300"></p>
+                        <h3 class="font-bold text-lg mb-2 text-violet-700">😻 추천 고양이 유형</h3>
+                        <p id="result-cat" class="text-gray-800"></p>
                     </div>
                 </div>
             </div>
@@ -102,7 +103,7 @@
                     인스타그램에 공유하기
                 </button>
 
-                <button id="retry-btn" class="w-full bg-gray-600 hover:bg-gray-500 text-white font-bold py-3 px-4 rounded-lg text-lg transition-transform transform hover:scale-105">
+                <button id="retry-btn" class="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-4 rounded-lg text-lg transition-transform transform hover:scale-105">
                     다시 테스트하기
                 </button>
             </div>
@@ -122,6 +123,7 @@
         const progressBar = document.getElementById('progress-bar');
         const questionNumber = document.getElementById('question-number');
         const questionText = document.getElementById('question-text');
+        const questionImage = document.getElementById('question-image');
         const answerButtons = document.getElementById('answer-buttons');
         
         const resultContent = document.getElementById('result-content');
@@ -131,10 +133,12 @@
         const resultDescription = document.getElementById('result-description');
         const resultCat = document.getElementById('result-cat');
 
-        // 테스트 데이터 (질문 9개로 수정)
+        // 각 질문에 이미지 파일명을 추가
         const quizData = [
             {
+                id: 1,
                 question: "지친 몸을 이끌고 현관문을 열자마자 고양이가 발에 몸을 비빕니다. 당신의 첫 행동은?",
+                image: "images/Q1.png",
                 answers: [
                     { type: 'A', text: "내 몸은 부서져도 상관없다. 신발도 벗기 전에 장난감부터 꺼내 흔든다." },
                     { type: 'B', text: "\"오냐, 내 몸을 허하노라.\" 바닥에 주저앉아 고양이 털에 얼굴을 파묻는다." },
@@ -143,7 +147,9 @@
                 ]
             },
             {
+                id: 2,
                 question: "황금 같은 주말 오후, 뭘 해야 집사 인생에 후회가 없을까요?",
+                image: "images/Q2.png",
                 answers: [
                     { type: 'A', text: "광란의 레이저 파티. \"너 죽고 나 살자!\"" },
                     { type: 'B', text: "고양이가 내 배 위에서 잠든 사이, 숨 막혀도 좋으니 꼼짝 않고 누워있는다." },
@@ -152,7 +158,9 @@
                 ]
             },
             {
+                id: 3,
                 question: "고양이가 이유 없이 당신을 빤히 쳐다보며 \"애옹\" 하고 웁니다. 당신의 속마음은?",
+                image: "images/Q3.png",
                 answers: [
                     { type: 'A', text: "\"또 시작이군. 오늘은 몇 시간이나 놀아드려야 만족하실까?\"" },
                     { type: 'B', text: "\"제발 나 좀 안아달라는 소리였으면... 제발...\"" },
@@ -161,7 +169,9 @@
                 ]
             },
             {
+                id: 4,
                 question: "꿀잠 자는 고양이를 발견했을 때, 참을 수 없는 당신의 본능은?",
+                image: "images/Q4.png",
                 answers: [
                     { type: 'A', text: "자는 모습도 귀엽지만, 역시 노는 게 제일 좋다. 엉덩이를 씰룩거리며 다가가 툭 건드린다." },
                     { type: 'B', text: "자는 애 옆에 일부러 비집고 누워본다. 잠결에라도 나를 핥아줄지 모른다." },
@@ -170,7 +180,9 @@
                 ]
             },
             {
+                id: 5,
                 question: "당신의 스마트폰 갤러리에서 가장 많은 지분을 차지하는 것은?",
+                image: "images/Q5.png",
                 answers: [
                     { type: 'A', text: "고양이가 장난감에 미쳐 날뛰는 순간을 포착한 10초짜리 슬로모션 영상." },
                     { type: 'B', text: "내 얼굴에 엉덩이를 대고 자는 고양이와 함께 찍은 셀카." },
@@ -179,7 +191,9 @@
                 ]
             },
             {
+                id: 6,
                 question: "고양이가 방금 잡은 벌레를 내 발 앞에 떨어뜨립니다. 이 '선물'의 의미는?",
+                image: "images/Q6.png",
                 answers: [
                     { type: 'A', text: "\"사냥 실력이 녹슬었구나, 집사. 보고 배워라.\" 라는 뜻으로 받아들이고 \"땡큐!\"를 외친다." },
                     { type: 'B', text: "나를 위해 준비한 그의 마음에 감동하며, 벌레는 못 본 척 고양이만 끌어안는다." },
@@ -188,7 +202,9 @@
                 ]
             },
             {
+                id: 7,
                 question: "'이 맛에 집사 하지'라고 느끼는 최고의 순간은?",
+                image: "images/Q7.png",
                 answers: [
                     { type: 'A', text: "장난감을 향해 돌진하며 공중 3회전을 도는 모습을 볼 때. (내 어깨는 부서져도 좋다)" },
                     { type: 'B', text: "내 숨소리를 자장가 삼아 품에서 잠들었을 때. (나는 화장실을 참는다)" },
@@ -197,7 +213,9 @@
                 ]
             },
             {
+                id: 8,
                 question: "까다로운 주군의 사료를 고르는 기준은?",
+                image: "images/Q8.png",
                 answers: [
                     { type: 'A', text: "\"뛰어라, 뚱냥아!\" 우리 애의 넘치는 에너지를 위한 고단백 고칼로리 사료." },
                     { type: 'B', text: "성분 따위... 주군께서 입맛이 없으시다는데, 일단 제일 잘 먹는 걸로 바친다." },
@@ -206,7 +224,9 @@
                 ]
             },
             {
+                id: 9,
                 question: "고양이가 좁은 틈에 들어가 한참을 안 나옵니다. 당신의 선택은?",
+                image: "images/Q9.png",
                 answers: [
                     { type: 'A', text: "그 틈 앞에서 필사적으로 장난감을 흔든다. \"나와라, 제발!\"" },
                     { type: 'B', text: "\"혹시 삐졌니? 내가 뭐 잘못했어?\" 문 앞에서 간식을 흔들며 애원한다." },
@@ -251,6 +271,7 @@
         // 테스트 상태 변수
         let currentQuestionIndex = 0;
         let scores = { A: 0, B: 0, C: 0, D: 0 };
+        let shuffledIndices = [];
 
         // 이벤트 리스너
         startBtn.addEventListener('click', startQuiz);
@@ -263,15 +284,11 @@
             const adoptBtn = document.getElementById('adopt-btn');
             const appStoreUrl = 'https://apps.apple.com/kr/app/ritty/id6502269998';
             
-            // iOS (iPhone, iPad, iPod) 기기인지 확인합니다.
             if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
                 adoptBtn.href = appStoreUrl;
             }
-            // 안드로이드 기기는 기본 href인 Play Store 링크를 그대로 사용합니다.
-            // 다른 OS(데스크탑 등)도 기본 링크를 사용합니다.
         }
 
-        // 페이지가 로드될 때 스토어 링크 설정 함수를 실행합니다.
         setStoreLink();
 
         // 함수 정의
@@ -281,6 +298,14 @@
             resultScreen.classList.add('hidden');
             currentQuestionIndex = 0;
             scores = { A: 0, B: 0, C: 0, D: 0 };
+            
+            // 질문 순서 섞기
+            shuffledIndices = Array.from(Array(quizData.length).keys());
+            for (let i = shuffledIndices.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffledIndices[i], shuffledIndices[j]] = [shuffledIndices[j], shuffledIndices[i]];
+            }
+
             showQuestion();
         }
 
@@ -290,7 +315,9 @@
             void container.offsetWidth;
             container.classList.add('fade-in');
 
-            const question = quizData[currentQuestionIndex];
+            // 섞인 순서에 따라 질문 가져오기
+            const questionIndex = shuffledIndices[currentQuestionIndex];
+            const question = quizData[questionIndex];
             
             const shuffledAnswers = [...question.answers];
             for (let i = shuffledAnswers.length - 1; i > 0; i--) {
@@ -303,12 +330,13 @@
 
             questionNumber.textContent = `Question ${currentQuestionIndex + 1}/${quizData.length}`;
             questionText.textContent = question.question;
+            questionImage.src = question.image; // 질문 이미지 설정
             
             answerButtons.innerHTML = '';
             shuffledAnswers.forEach(answer => { 
                 const button = document.createElement('button');
                 button.innerHTML = answer.text;
-                button.className = "w-full bg-gray-700 hover:bg-red-500 hover:text-white p-4 rounded-lg transition-all text-left";
+                button.className = "w-full bg-gray-100 hover:bg-violet-100 text-slate-800 p-4 rounded-lg transition-all text-left border border-gray-200";
                 button.onclick = () => selectAnswer(answer.type);
                 answerButtons.appendChild(button);
             });
@@ -351,7 +379,6 @@
                 resultType = tiedTypes[Math.floor(Math.random() * tiedTypes.length)];
             }
 
-
             const result = resultsData[resultType];
             resultImage.src = result.image;
             resultSubtitle.textContent = result.subtitle;
@@ -374,13 +401,16 @@
             shareBtn.textContent = '공유 이미지 생성 중...';
 
             try {
+                resultElement.style.width = '640px'; 
+
                 const canvas = await html2canvas(resultElement, {
-                    backgroundColor: "#1f2937",
+                    backgroundColor: "#ffffff",
                     useCORS: true,
                     scale: 2,
                 });
 
-                // 캔버스를 파일 객체로 변환
+                resultElement.style.width = '';
+
                 canvas.toBlob(async (blob) => {
                     const file = new File([blob], "나의_집사유형_결과.png", { type: "image/png" });
                     const shareData = {
@@ -389,19 +419,16 @@
                         text: '과연 나는 어떤 유형의 집사일까? 지금 바로 확인해보세요!',
                     };
 
-                    // Web Share API를 지원하는지 확인
                     if (navigator.share && navigator.canShare(shareData)) {
                         try {
                             await navigator.share(shareData);
                             shareBtn.textContent = '공유 완료!';
                         } catch (err) {
-                            // 사용자가 공유를 취소한 경우
                             console.log('Share was cancelled', err);
                             shareBtn.textContent = '인스타그램에 공유하기';
                         }
                     } else {
-                        // 데스크탑 등 공유 기능을 지원하지 않는 경우, 다운로드로 대체
-                        alert('공유 기능을 지원하지 않는 환경입니다. 이미지를 다운로드합니다.');
+                        alert('공유 기능을 지원하지 않거나 HTTPS 환경이 아닙니다. 이미지를 다운로드합니다.');
                         const imageURL = URL.createObjectURL(blob);
                         const downloadLink = document.createElement('a');
                         downloadLink.href = imageURL;
