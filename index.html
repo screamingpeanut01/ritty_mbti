@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>매운맛 집사 유형 테스트</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap">
+    <!-- html2canvas 라이브러리 추가 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .progress-bar-inner {
+            transition: width 0.3s ease-in-out;
+        }
+        /* 버튼 비활성화 시 스타일 */
+        button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        /* 인스타그램 공유 버튼 스타일 */
+        .instagram-btn {
+            background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white flex items-center justify-center min-h-screen p-4">
+
+    <div id="app" class="w-full max-w-2xl mx-auto bg-gray-800 rounded-xl shadow-2xl p-6 md:p-10 text-center">
+
+        <!-- 시작 화면 -->
+        <div id="start-screen" class="fade-in">
+            <!-- 이미지 경로 수정 -->
+            <img src="images/main.png" alt="고양이 캐릭터 이미지" class="w-40 h-40 md:w-48 md:h-48 rounded-full object-cover mx-auto mb-6 shadow-lg border-4 border-red-400">
+            
+            <h1 class="text-3xl md:text-4xl font-bold mb-2 text-red-400">매운맛 집사 유형 테스트</h1>
+            <p class="text-gray-300 mb-8">당신은 어떤 유형의 집사일까요?<br>솔직한 당신의 본능을 확인해보세요.</p>
+            
+            <button id="start-btn" class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-4 rounded-lg text-lg transition-transform transform hover:scale-105">
+                테스트 시작하기
+            </button>
+        </div>
+
+        <!-- 질문 화면 -->
+        <div id="quiz-screen" class="hidden">
+            <!-- 진행도 바 -->
+            <div class="w-full bg-gray-700 rounded-full h-2.5 mb-6">
+                <div id="progress-bar" class="bg-red-500 h-2.5 rounded-full progress-bar-inner" style="width: 0%"></div>
+            </div>
+            
+            <div id="question-container" class="fade-in">
+                <p id="question-number" class="text-red-400 font-bold mb-2"></p>
+                <h2 id="question-text" class="text-xl md:text-2xl font-bold mb-8 min-h-[100px]"></h2>
+                <!-- 답변 버튼 레이아웃 변경: md:grid-cols-2 제거 -->
+                <div id="answer-buttons" class="grid grid-cols-1 gap-4">
+                    <!-- 답변 버튼이 여기에 동적으로 추가됩니다 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 결과 화면 -->
+        <div id="result-screen" class="hidden">
+            <div id="result-content" class="p-4 bg-gray-800">
+                <!-- 결과 이미지 추가 -->
+                <img id="result-image" src="" alt="결과 고양이 이미지" class="w-full h-auto object-cover rounded-lg mb-6 shadow-lg">
+
+                <p class="text-lg text-gray-400 mb-2">당신의 집사 유형은...</p>
+                <!-- 타이틀 구조 변경 -->
+                <div class="mb-6">
+                    <p id="result-subtitle" class="text-xl md:text-2xl text-gray-300"></p>
+                    <h2 id="result-main-title" class="text-3xl md:text-4xl font-bold text-red-400"></h2>
+                </div>
+                
+                <div class="bg-gray-700 p-6 rounded-lg text-left space-y-6">
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-red-300">🧐 집사 특징</h3>
+                        <p id="result-description" class="text-gray-300"></p>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2 text-red-300">😻 추천 고양이 유형</h3>
+                        <p id="result-cat" class="text-gray-300"></p>
+                    </div>
+                </div>
+            </div>
+            <div id="action-buttons" class="mt-8 space-y-4">
+                <!-- 입양하러가기 버튼 (기본 링크는 Play Store) -->
+                <a id="adopt-btn" href="https://play.google.com/store/apps/details?id=com.sammeows.ritty&pcampaignid=web_share" target="_blank" class="block w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-lg text-lg transition-transform transform hover:scale-105">
+                    나랑 딱맞는 고양이 입양하러가기
+                </a>
+
+                <!-- 인스타그램 공유 버튼으로 변경 -->
+                <button id="share-btn" class="w-full instagram-btn text-white font-bold py-3 px-4 rounded-lg text-lg transition-transform transform hover:scale-105">
+                    인스타그램에 공유하기
+                </button>
+
+                <button id="retry-btn" class="w-full bg-gray-600 hover:bg-gray-500 text-white font-bold py-3 px-4 rounded-lg text-lg transition-transform transform hover:scale-105">
+                    다시 테스트하기
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM 요소 가져오기
+        const startScreen = document.getElementById('start-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultScreen = document.getElementById('result-screen');
+        
+        const startBtn = document.getElementById('start-btn');
+        const retryBtn = document.getElementById('retry-btn');
+        const shareBtn = document.getElementById('share-btn');
+        
+        const progressBar = document.getElementById('progress-bar');
+        const questionNumber = document.getElementById('question-number');
+        const questionText = document.getElementById('question-text');
+        const answerButtons = document.getElementById('answer-buttons');
+        
+        const resultContent = document.getElementById('result-content');
+        const resultImage = document.getElementById('result-image');
+        const resultSubtitle = document.getElementById('result-subtitle');
+        const resultMainTitle = document.getElementById('result-main-title');
+        const resultDescription = document.getElementById('result-description');
+        const resultCat = document.getElementById('result-cat');
+
+        // 테스트 데이터 (질문 9개로 수정)
+        const quizData = [
+            {
+                question: "지친 몸을 이끌고 현관문을 열자마자 고양이가 발에 몸을 비빕니다. 당신의 첫 행동은?",
+                answers: [
+                    { type: 'A', text: "내 몸은 부서져도 상관없다. 신발도 벗기 전에 장난감부터 꺼내 흔든다." },
+                    { type: 'B', text: "\"오냐, 내 몸을 허하노라.\" 바닥에 주저앉아 고양이 털에 얼굴을 파묻는다." },
+                    { type: 'C', text: "일단 못 본 척 화장실로 직행한다. 우리가 그 정도는 이해해 줄 사이 아닌가?" },
+                    { type: 'D', text: "비비는 각도와 소리를 분석한다. 평소와 다른 점은 없는가? 어디 아픈가?" },
+                ]
+            },
+            {
+                question: "황금 같은 주말 오후, 뭘 해야 집사 인생에 후회가 없을까요?",
+                answers: [
+                    { type: 'A', text: "광란의 레이저 파티. \"너 죽고 나 살자!\"" },
+                    { type: 'B', text: "고양이가 내 배 위에서 잠든 사이, 숨 막혀도 좋으니 꼼짝 않고 누워있는다." },
+                    { type: 'C', text: "고양이는 창밖 구경, 나는 스마트폰. 서로의 영역을 침범하지 않는 완벽한 시간." },
+                    { type: 'D', text: "고양이 화장실 전체 갈이 및 소독, 정수기 필터 교체 등 미뤄왔던 집사 업무를 처리한다." },
+                ]
+            },
+            {
+                question: "고양이가 이유 없이 당신을 빤히 쳐다보며 \"애옹\" 하고 웁니다. 당신의 속마음은?",
+                answers: [
+                    { type: 'A', text: "\"또 시작이군. 오늘은 몇 시간이나 놀아드려야 만족하실까?\"" },
+                    { type: 'B', text: "\"제발 나 좀 안아달라는 소리였으면... 제발...\"" },
+                    { type: 'C', text: "\"말을 해, 말을! 답답해 죽겠네.\"" },
+                    { type: 'D', text: "\"혹시 내가 모르는 병이 생긴 건가? 일단 인터넷부터 검색한다.\"" },
+                ]
+            },
+            {
+                question: "꿀잠 자는 고양이를 발견했을 때, 참을 수 없는 당신의 본능은?",
+                answers: [
+                    { type: 'A', text: "자는 모습도 귀엽지만, 역시 노는 게 제일 좋다. 엉덩이를 씰룩거리며 다가가 툭 건드린다." },
+                    { type: 'B', text: "자는 애 옆에 일부러 비집고 누워본다. 잠결에라도 나를 핥아줄지 모른다." },
+                    { type: 'C', text: "이 순간을 영원히 박제하리라. 셔터 소리도 안 나는 앱으로 사진 500장을 찍는다." },
+                    { type: 'D', text: "혹시 숨쉬기 힘든 자세는 아닐까? 조심스럽게 고쳐주고 싶어 손이 근질거린다." },
+                ]
+            },
+            {
+                question: "당신의 스마트폰 갤러리에서 가장 많은 지분을 차지하는 것은?",
+                answers: [
+                    { type: 'A', text: "고양이가 장난감에 미쳐 날뛰는 순간을 포착한 10초짜리 슬로모션 영상." },
+                    { type: 'B', text: "내 얼굴에 엉덩이를 대고 자는 고양이와 함께 찍은 셀카." },
+                    { type: 'C', text: "정적인 자세로 창밖을 응시하는 고양이의 예술적인 흑백 사진." },
+                    { type: 'D', text: "오늘의 '감자' 상태를 기록하기 위해 찍어둔 고양이 화장실 사진." },
+                ]
+            },
+            {
+                question: "고양이가 방금 잡은 벌레를 내 발 앞에 떨어뜨립니다. 이 '선물'의 의미는?",
+                answers: [
+                    { type: 'A', text: "\"사냥 실력이 녹슬었구나, 집사. 보고 배워라.\" 라는 뜻으로 받아들이고 \"땡큐!\"를 외친다." },
+                    { type: 'B', text: "나를 위해 준비한 그의 마음에 감동하며, 벌레는 못 본 척 고양이만 끌어안는다." },
+                    { type: 'C', text: "\"고맙다...\" 영혼 없는 목소리로 칭찬한 뒤, 녀석이 한눈팔 때 빛의 속도로 치운다." },
+                    { type: 'D', text: "벌레에 독은 없는지, 고양이가 먹지는 않았는지부터 확인해야 한다." },
+                ]
+            },
+            {
+                question: "'이 맛에 집사 하지'라고 느끼는 최고의 순간은?",
+                answers: [
+                    { type: 'A', text: "장난감을 향해 돌진하며 공중 3회전을 도는 모습을 볼 때. (내 어깨는 부서져도 좋다)" },
+                    { type: 'B', text: "내 숨소리를 자장가 삼아 품에서 잠들었을 때. (나는 화장실을 참는다)" },
+                    { type: 'C', text: "내가 뭘 하든 신경도 안 쓰는 줄 알았는데, 어느새 내 옆에 와서 앉아있을 때." },
+                    { type: 'D', text: "비싼 영양제와 사료 덕분에 황금 맛동산을 생산한 것을 확인할 때." },
+                ]
+            },
+            {
+                question: "까다로운 주군의 사료를 고르는 기준은?",
+                answers: [
+                    { type: 'A', text: "\"뛰어라, 뚱냥아!\" 우리 애의 넘치는 에너지를 위한 고단백 고칼로리 사료." },
+                    { type: 'B', text: "성분 따위... 주군께서 입맛이 없으시다는데, 일단 제일 잘 먹는 걸로 바친다." },
+                    { type: 'C', text: "어차피 곧 질려 할 테니, 저렴한 샘플 사료를 여러 개 사서 돌려 막는다." },
+                    { type: 'D', text: "뒷면에 적힌 성분표를 정독하고 논문까지 찾아본다. 알레르기 유발 성분은 1g도 용납 못 한다." },
+                ]
+            },
+            {
+                question: "고양이가 좁은 틈에 들어가 한참을 안 나옵니다. 당신의 선택은?",
+                answers: [
+                    { type: 'A', text: "그 틈 앞에서 필사적으로 장난감을 흔든다. \"나와라, 제발!\"" },
+                    { type: 'B', text: "\"혹시 삐졌니? 내가 뭐 잘못했어?\" 문 앞에서 간식을 흔들며 애원한다." },
+                    { type: 'C', text: "나올 때 되면 알아서 나오겠지. 이럴 땐 그냥 두는 게 상책이다." },
+                    { type: 'D', text: "\"거기 먼지 많을 텐데? 혹시 어디 낀 거 아니야?\" 온갖 걱정을 하며 안절부절못한다." },
+                ]
+            }
+        ];
+
+        // resultsData의 이미지 경로 수정
+        const resultsData = {
+            A: {
+                subtitle: "캣타워와 한 몸인",
+                mainTitle: "'인간 낚싯대' 집사",
+                description: "내 허리 건강보다 중요한 건 주군의 사냥 본능 해소입니다. 통장을 털어 장난감을 상납하고, 퇴근 후엔 지친 몸을 이끌고 기꺼이 인간 낚싯대가 되어줍니다.",
+                cat: "'지치면 죽는다' 개구쟁이 고양이. 집사의 체력을 방전시키는 것을 유일한 낙으로 삼는 에너지 넘치는 사냥꾼입니다.",
+                image: "images/pritty.png" 
+            },
+            B: {
+                subtitle: "고양이에게 자아를 의탁한",
+                mainTitle: "'인간 온수매트' 집사",
+                description: "고양이의 체온과 말랑한 뱃살, 골골송만이 현생의 고통을 잊게 하는 유일한 마약입니다. 고양이의 심기를 거스르지 않고 최적의 온도를 제공하는 것에 집착합니다.",
+                cat: "'집사는 내 침대' 애교냥이. 집사의 배 위를 세상에서 가장 편한 소파로 여기며, 집사의 의사와 상관없이 일단 몸부터 부비고 보는 스킨십 중독자입니다.",
+                image: "images/cheetty.png"
+            },
+            C: {
+                subtitle: "월세 내는 동거인",
+                mainTitle: "'조용한 관찰자' 집사",
+                description: "고양이는 고양이, 나는 나. 우리는 서로의 사생활을 존중하는 쿨한 룸메이트 관계라 믿고 있습니다. 사실은 고양이가 언제 다가와 줄까 애타게 기다립니다.",
+                cat: "'가끔 아는 척은 해줄게' 마이웨이 고양이. 집사를 투명인간 취급하다가도, 츄르 뜯는 소리가 들리면 어디선가 홀연히 나타나는 밀당의 신입니다.",
+                image: "images/chilltty.png"
+            },
+            D: {
+                subtitle: "사서 고생하는",
+                mainTitle: "'헬리콥터 집사'",
+                description: "고양이의 모든 것을 데이터화해야 직성이 풀립니다. 오늘의 음수량, 어제의 감자 크기, 지난주의 토 상태까지 기록하고 분석합니다. 고양이 건강 염려증 말기 환자입니다.",
+                cat: "'관심 없으면 짖는다' 어리광쟁이 고양이. 1분 1초 집사의 시선을 갈구하며, 조금이라도 소홀하면 온갖 방법으로 존재감을 드러내 집사를 조종하는 작은 폭군입니다.",
+                image: "images/samtty.png" 
+            }
+        };
+
+        // 테스트 상태 변수
+        let currentQuestionIndex = 0;
+        let scores = { A: 0, B: 0, C: 0, D: 0 };
+
+        // 이벤트 리스너
+        startBtn.addEventListener('click', startQuiz);
+        retryBtn.addEventListener('click', retryQuiz);
+        shareBtn.addEventListener('click', shareResult);
+
+        // OS를 감지하여 스토어 링크를 동적으로 설정하는 함수
+        function setStoreLink() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            const adoptBtn = document.getElementById('adopt-btn');
+            const appStoreUrl = 'https://apps.apple.com/kr/app/ritty/id6502269998';
+            
+            // iOS (iPhone, iPad, iPod) 기기인지 확인합니다.
+            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                adoptBtn.href = appStoreUrl;
+            }
+            // 안드로이드 기기는 기본 href인 Play Store 링크를 그대로 사용합니다.
+            // 다른 OS(데스크탑 등)도 기본 링크를 사용합니다.
+        }
+
+        // 페이지가 로드될 때 스토어 링크 설정 함수를 실행합니다.
+        setStoreLink();
+
+        // 함수 정의
+        function startQuiz() {
+            startScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            resultScreen.classList.add('hidden');
+            currentQuestionIndex = 0;
+            scores = { A: 0, B: 0, C: 0, D: 0 };
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const container = document.getElementById('question-container');
+            container.classList.remove('fade-in');
+            void container.offsetWidth;
+            container.classList.add('fade-in');
+
+            const question = quizData[currentQuestionIndex];
+            
+            const shuffledAnswers = [...question.answers];
+            for (let i = shuffledAnswers.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffledAnswers[i], shuffledAnswers[j]] = [shuffledAnswers[j], shuffledAnswers[i]];
+            }
+            
+            const progress = ((currentQuestionIndex) / quizData.length) * 100;
+            progressBar.style.width = `${progress}%`;
+
+            questionNumber.textContent = `Question ${currentQuestionIndex + 1}/${quizData.length}`;
+            questionText.textContent = question.question;
+            
+            answerButtons.innerHTML = '';
+            shuffledAnswers.forEach(answer => { 
+                const button = document.createElement('button');
+                button.innerHTML = answer.text;
+                button.className = "w-full bg-gray-700 hover:bg-red-500 hover:text-white p-4 rounded-lg transition-all text-left";
+                button.onclick = () => selectAnswer(answer.type);
+                answerButtons.appendChild(button);
+            });
+        }
+
+        function selectAnswer(type) {
+            scores[type]++;
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            quizScreen.classList.add('hidden');
+            resultScreen.classList.remove('hidden');
+            
+            progressBar.style.width = '100%';
+
+            let maxScore = -1;
+            let resultType = '';
+            let isTie = false;
+            let tiedTypes = [];
+
+            for (const type in scores) {
+                if (scores[type] > maxScore) {
+                    maxScore = scores[type];
+                    resultType = type;
+                    isTie = false;
+                    tiedTypes = [type];
+                } else if (scores[type] === maxScore) {
+                    isTie = true;
+                    tiedTypes.push(type);
+                }
+            }
+            
+            if (isTie) {
+                resultType = tiedTypes[Math.floor(Math.random() * tiedTypes.length)];
+            }
+
+
+            const result = resultsData[resultType];
+            resultImage.src = result.image;
+            resultSubtitle.textContent = result.subtitle;
+            resultMainTitle.textContent = result.mainTitle;
+            resultDescription.textContent = result.description;
+            resultCat.textContent = result.cat;
+        }
+        
+        function retryQuiz() {
+            resultScreen.classList.add('hidden');
+            startScreen.classList.remove('hidden');
+            startScreen.classList.add('fade-in');
+        }
+
+        async function shareResult() {
+            const shareBtn = document.getElementById('share-btn');
+            const resultElement = document.getElementById('result-content');
+
+            shareBtn.disabled = true;
+            shareBtn.textContent = '공유 이미지 생성 중...';
+
+            try {
+                const canvas = await html2canvas(resultElement, {
+                    backgroundColor: "#1f2937",
+                    useCORS: true,
+                    scale: 2,
+                });
+
+                // 캔버스를 파일 객체로 변환
+                canvas.toBlob(async (blob) => {
+                    const file = new File([blob], "나의_집사유형_결과.png", { type: "image/png" });
+                    const shareData = {
+                        files: [file],
+                        title: '나의 매운맛 집사 유형은?',
+                        text: '과연 나는 어떤 유형의 집사일까? 지금 바로 확인해보세요!',
+                    };
+
+                    // Web Share API를 지원하는지 확인
+                    if (navigator.share && navigator.canShare(shareData)) {
+                        try {
+                            await navigator.share(shareData);
+                            shareBtn.textContent = '공유 완료!';
+                        } catch (err) {
+                            // 사용자가 공유를 취소한 경우
+                            console.log('Share was cancelled', err);
+                            shareBtn.textContent = '인스타그램에 공유하기';
+                        }
+                    } else {
+                        // 데스크탑 등 공유 기능을 지원하지 않는 경우, 다운로드로 대체
+                        alert('공유 기능을 지원하지 않는 환경입니다. 이미지를 다운로드합니다.');
+                        const imageURL = URL.createObjectURL(blob);
+                        const downloadLink = document.createElement('a');
+                        downloadLink.href = imageURL;
+                        downloadLink.download = '나의_집사유형_결과.png';
+                        document.body.appendChild(downloadLink);
+                        downloadLink.click();
+                        document.body.removeChild(downloadLink);
+                        URL.revokeObjectURL(imageURL);
+                    }
+                }, 'image/png');
+
+            } catch (err) {
+                console.error("이미지 변환 실패:", err);
+                alert("이미지 생성에 실패했습니다. 다시 시도해주세요.");
+            } finally {
+                shareBtn.disabled = false;
+                if(shareBtn.textContent.includes('...')) {
+                   shareBtn.textContent = '인스타그램에 공유하기';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
