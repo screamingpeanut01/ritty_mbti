@@ -160,7 +160,7 @@
                     html2canvas(resultElement, {
                         backgroundColor: "#ffffff",
                         useCORS: true,
-                        scale: 2,
+                        scale: 1.5,
                     }).then(canvas => {
                         canvas.toBlob(async (blob) => {
                             const file = new File([blob], "나의_집사유형_결과.png", { type: "image/png" });
