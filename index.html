@@ -45,8 +45,8 @@
             <h1 class="text-3xl md:text-4xl font-bold mb-2 text-violet-600">매운맛 집사 유형 테스트</h1>
             <p class="text-gray-600 mb-8">당신은 어떤 유형의 집사일까요?<br>솔직한 당신의 본능을 확인해보세요.</p>
             
-            <div class="relative bg-violet-100 text-violet-800 font-semibold p-3 rounded-lg mb-6 text-center shadow-sm w-3/4 mx-auto">
-                💡 테스트 결과를 공유하고 특별한 선물도 받아 가세요!
+            <div class="relative bg-violet-100 text-violet-800 font-semibold p-3 rounded-lg mb-6 text-center shadow-sm w-full md:w-3/4 mx-auto">
+                ⭐ 테스트하고 선물받아가자⭐
                 <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-0 h-0 border-x-8 border-x-transparent border-t-8 border-t-violet-100"></div>
             </div>
 
@@ -102,7 +102,7 @@
     </div>
 
     <!-- ▼▼▼ 이벤트 팝업 HTML ▼▼▼ -->
-    <div id="event-popup" class="hidden fixed inset-0 bg-black bg-opacity-80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div id="event-popup" class="hidden fixed inset-0 bg-black bg-opacity-75 backdrop-blur-sm flex items-center justify-center z-50 p-4">
         <div class="bg-white rounded-lg shadow-2xl w-full max-w-md relative">
             <!-- 이미지 슬라이더 컨테이너 -->
             <div class="relative">
@@ -131,6 +131,12 @@
     </div>
     <!-- ▲▲▲ 이벤트 팝업 HTML 끝 ▲▲▲ -->
 
+    <!-- ▼▼▼ 이벤트 플로팅 버튼 ▼▼▼ -->
+    <button id="event-island-btn" class="fixed bottom-5 right-5 bg-violet-500 hover:bg-violet-600 text-white font-bold py-2 px-4 rounded-full shadow-lg transition-transform transform hover:scale-110 z-40">
+        EVENT 🎉
+    </button>
+    <!-- ▲▲▲ 이벤트 플로팅 버튼 끝 ▲▲▲ -->
+
     <script>
         window.dataLayer = window.dataLayer || [];
 
@@ -154,12 +160,13 @@
         const resultDescription = document.getElementById('result-description');
         const resultCat = document.getElementById('result-cat');
 
-        // ▼▼▼ 팝업 관련 요소 추가 ▼▼▼
+        // 팝업 관련 요소
         const eventPopup = document.getElementById('event-popup');
         const closePopupBtn = document.getElementById('close-popup');
         const slideImage = document.getElementById('slide-image');
         const prevSlideBtn = document.getElementById('prev-slide');
         const nextSlideBtn = document.getElementById('next-slide');
+        const eventIslandBtn = document.getElementById('event-island-btn'); // 플로팅 버튼
 
         const quizData = [ { id: 1, question: "지친 몸을 이끌고 현관문을 열자마자 고양이가 발에 몸을 비빕니다. 당신의 첫 행동은?", image: "images/Q1.png", answers: [ { type: 'A', text: "내 몸은 부서져도 상관없다. 신발도 벗기 전에 장난감부터 꺼내 흔든다." }, { type: 'B', text: "\"오냐, 내 몸을 허하노라.\" 바닥에 주저앉아 고양이 털에 얼굴을 파묻는다." }, { type: 'C', text: "일단 못 본 척 화장실로 직행한다. 우리가 그 정도는 이해해 줄 사이 아닌가?" }, { type: 'D', text: "비비는 각도와 소리를 분석한다. 평소와 다른 점은 없는가? 어디 아픈가?" }, ] }, { id: 2, question: "황금 같은 주말 오후, 뭘 해야 집사 인생에 후회가 없을까요?", image: "images/Q2.png", answers: [ { type: 'A', text: "광란의 레이저 파티. \"너 죽고 나 살자!\"" }, { type: 'B', text: "고양이가 내 배 위에서 잠든 사이, 숨 막혀도 좋으니 꼼짝 않고 누워있는다." }, { type: 'C', text: "고양이는 창밖 구경, 나는 스마트폰. 서로의 영역을 침범하지 않는 완벽한 시간." }, { type: 'D', text: "고양이 화장실 전체 갈이 및 소독, 정수기 필터 교체 등 미뤄왔던 집사 업무를 처리한다." }, ] }, { id: 3, question: "고양이가 이유 없이 당신을 빤히 쳐다보며 \"애옹\" 하고 웁니다. 당신의 속마음은?", image: "images/Q3.png", answers: [ { type: 'A', text: "\"또 시작이군. 오늘은 몇 시간이나 놀아드려야 만족하실까?\"" }, { type: 'B', text: "\"제발 나 좀 안아달라는 소리였으면... 제발...\"" }, { type: 'C', text: "\"말을 해, 말을! 답답해 죽겠네.\"" }, { type: 'D', text: "\"혹시 내가 모르는 병이 생긴 건가? 일단 인터넷부터 검색한다.\"" }, ] }, { id: 4, question: "꿀잠 자는 고양이를 발견했을 때, 참을 수 없는 당신의 본능은?", image: "images/Q4.png", answers: [ { type: 'A', text: "자는 모습도 귀엽지만, 역시 노는 게 제일 좋다. 엉덩이를 씰룩거리며 다가가 툭 건드린다." }, { type: 'B', text: "자는 애 옆에 일부러 비집고 누워본다. 잠결에라도 나를 핥아줄지 모른다." }, { type: 'C', text: "이 순간을 영원히 박제하리라. 셔터 소리도 안 나는 앱으로 사진 500장을 찍는다." }, { type: 'D', text: "혹시 숨쉬기 힘든 자세는 아닐까? 조심스럽게 고쳐주고 싶어 손이 근질거린다." }, ] }, { id: 5, question: "당신의 스마트폰 갤러리에서 가장 많은 지분을 차지하는 것은?", image: "images/Q5.png", answers: [ { type: 'A', text: "고양이가 장난감에 미쳐 날뛰는 순간을 포착한 10초짜리 슬로모션 영상." }, { type: 'B', text: "내 얼굴에 엉덩이를 대고 자는 고양이와 함께 찍은 셀카." }, { type: 'C', text: "정적인 자세로 창밖을 응시하는 고양이의 예술적인 흑백 사진." }, { type: 'D', text: "오늘의 '감자' 상태를 기록하기 위해 찍어둔 고양이 화장실 사진." }, ] }, { id: 6, question: "고양이가 방금 잡은 벌레를 내 발 앞에 떨어뜨립니다. 이 '선물'의 의미는?", image: "images/Q6.png", answers: [ { type: 'A', text: "\"사냥 실력이 녹슬었구나, 집사. 보고 배워라.\" 라는 뜻으로 받아들이고 \"땡큐!\"를 외친다." }, { type: 'B', text: "나를 위해 준비한 그의 마음에 감동하며, 벌레는 못 본 척 고양이만 끌어안는다." }, { type: 'C', text: "\"고맙다...\" 영혼 없는 목소리로 칭찬한 뒤, 녀석이 한눈팔 때 빛의 속도로 치운다." }, { type: 'D', text: "벌레에 독은 없는지, 고양이가 먹지는 않았는지부터 확인해야 한다." }, ] }, { id: 7, question: "'이 맛에 집사 하지'라고 느끼는 최고의 순간은?", image: "images/Q7.png", answers: [ { type: 'A', text: "장난감을 향해 돌진하며 공중 3회전을 도는 모습을 볼 때. (내 어깨는 부서져도 좋다)" }, { type: 'B', text: "내 숨소리를 자장가 삼아 품에서 잠들었을 때. (나는 화장실을 참는다)" }, { type: 'C', text: "내가 뭘 하든 신경도 안 쓰는 줄 알았는데, 어느새 내 옆에 와서 앉아있을 때." }, { type: 'D', text: "비싼 영양제와 사료 덕분에 황금 맛동산을 생산한 것을 확인할 때." }, ] }, { id: 8, question: "까다로운 주군의 사료를 고르는 기준은?", image: "images/Q8.png", answers: [ { type: 'A', text: "\"뛰어라, 뚱냥아!\" 우리 애의 넘치는 에너지를 위한 고단백 고칼로리 사료." }, { type: 'B', text: "성분 따위... 주군께서 입맛이 없으시다는데, 일단 제일 잘 먹는 걸로 바친다." }, { type: 'C', text: "어차피 곧 질려 할 테니, 저렴한 샘플 사료를 여러 개 사서 돌려 막는다." }, { type: 'D', text: "뒷면에 적힌 성분표를 정독하고 논문까지 찾아본다. 알레르기 유발 성분은 1g도 용납 못 한다." }, ] }, { id: 9, question: "고양이가 좁은 틈에 들어가 한참을 안 나옵니다. 당신의 선택은?", image: "images/Q9.png", answers: [ { type: 'A', text: "그 틈 앞에서 필사적으로 장난감을 흔든다. \"나와라, 제발!\"" }, { type: 'B', text: "\"혹시 삐졌니? 내가 뭐 잘못했어?\" 문 앞에서 간식을 흔들며 애원한다." }, { type: 'C', text: "나올 때 되면 알아서 나오겠지. 이럴 땐 그냥 두는 게 상책이다." }, { type: 'D', text: "\"거기 먼지 많을 텐데? 혹시 어디 낀 거 아니야?\" 온갖 걱정을 하며 안절부절못한다." }, ] } ];
         const resultsData = { A: { subtitle: "캣타워와 한 몸인", mainTitle: "'인간 낚싯대' 집사", description: "내 허리 건강보다 중요한 건 주군의 사냥 본능 해소입니다. 통장을 털어 장난감을 상납하고, 퇴근 후엔 지친 몸을 이끌고 기꺼이 인간 낚싯대가 되어줍니다.", cat: "'지치면 죽는다' 개구쟁이 고양이. 집사의 체력을 방전시키는 것을 유일한 낙으로 삼는 에너지 넘치는 사냥꾼입니다.", image: "images/pritty.png" }, B: { subtitle: "고양이에게 자아를 의탁한", mainTitle: "'인간 온수매트' 집사", description: "고양이의 체온과 말랑한 뱃살, 골골송만이 현생의 고통을 잊게 하는 유일한 마약입니다. 고양이의 심기를 거스르지 않고 최적의 온도를 제공하는 것에 집착합니다.", cat: "'집사는 내 침대' 애교냥이. 집사의 배 위를 세상에서 가장 편한 소파로 여기며, 집사의 의사와 상관없이 일단 몸부터 부비고 보는 스킨십 중독자입니다.", image: "images/cheetty.png" }, C: { subtitle: "월세 내는 동거인", mainTitle: "'조용한 관찰자' 집사", description: "고양이는 고양이, 나는 나. 우리는 서로의 사생활을 존중하는 쿨한 룸메이트 관계라 믿고 있습니다. 사실은 고양이가 언제 다가와 줄까 애타게 기다립니다.", cat: "'가끔 아는 척은 해줄게' 마이웨이 고양이. 집사를 투명인간 취급하다가도, 츄르 뜯는 소리가 들리면 어디선가 홀연히 나타나는 밀당의 신입니다.", image: "images/chilltty.png" }, D: { subtitle: "사서 고생하는", mainTitle: "'헬리콥터 집사'", description: "고양이의 모든 것을 데이터화해야 직성이 풀립니다. 오늘의 음수량, 어제의 감자 크기, 지난주의 토 상태까지 기록하고 분석합니다. 고양이 건강 염려증 말기 환자입니다.", cat: "'관심 없으면 짖는다' 어리광쟁이 고양이. 1분 1초 집사의 시선을 갈구하며, 조금이라도 소홀하면 온갖 방법으로 존재감을 드러내 집사를 조종하는 작은 폭군입니다.", image: "images/samtty.png" } };
@@ -265,8 +272,6 @@
             resultDescription.textContent = result.description;
             resultCat.textContent = result.cat;
             dataLayer.push({'event': 'test_completed', 'result_type': result.mainTitle});
-            
-            // ▼▼▼ 결과 페이지 표시 후 팝업 띄우기 ▼▼▼
             showEventPopup();
         }
 
@@ -347,18 +352,16 @@
             }
         }
 
-        // --- ▼▼▼ 팝업 및 슬라이더 로직 ▼▼▼ ---
+        // --- 팝업 및 슬라이더 로직 ---
         const slideImages = ['images/event1.webp', 'images/event2.webp', 'images/event3.webp'];
         let currentSlideIndex = 0;
 
         function updateSlide(index) {
-            // 이미지에 페이드 아웃 효과를 줌
             slideImage.style.opacity = 0;
-            // 잠시 후 이미지를 바꾸고 페이드 인 효과를 줌
             setTimeout(() => {
                 slideImage.src = slideImages[index];
                 slideImage.style.opacity = 1;
-            }, 300); // CSS transition 시간과 일치
+            }, 300);
         }
 
         function nextSlide() {
@@ -385,8 +388,8 @@
         nextSlideBtn.addEventListener('click', nextSlide);
         prevSlideBtn.addEventListener('click', prevSlide);
         closePopupBtn.addEventListener('click', closeEventPopup);
+        eventIslandBtn.addEventListener('click', showEventPopup); // 플로팅 버튼 리스너
         eventPopup.addEventListener('click', (e) => {
-            // 팝업의 어두운 배경 부분을 클릭했을 때만 닫히도록 함
             if (e.target === eventPopup) {
                 closeEventPopup();
             }
