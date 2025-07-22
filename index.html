@@ -90,7 +90,7 @@
                     나랑 딱맞는 고양이 입양하러가기
                 </a>
                 <button id="share-btn" class="w-full instagram-btn text-white font-bold py-3 px-4 rounded-lg text-lg transition-transform transform hover:scale-105">
-                    인스타그램에 공유하기
+                    결과 공유하기
                 </button>
                 <button id="retry-btn" class="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-4 rounded-lg text-lg transition-transform transform hover:scale-105">
                     다시 테스트하기
@@ -132,84 +132,192 @@
             dataLayer.push({'event': 'store_redirect_click', 'link_url': adoptBtn.href});
         });
 
-        function setStoreLink() { const userAgent = navigator.userAgent || navigator.vendor || window.opera; const appStoreUrl = 'https://apps.apple.com/kr/app/ritty/id6502269998'; if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) { adoptBtn.href = appStoreUrl; } }
+        function setStoreLink() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            const appStoreUrl = 'https://apps.apple.com/kr/app/ritty/id6502269998';
+            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                adoptBtn.href = appStoreUrl;
+            }
+        }
         setStoreLink();
-        let currentQuestionIndex = 0; let scores = { A: 0, B: 0, C: 0, D: 0 }; let shuffledIndices = [];
-        function startQuiz() { startScreen.classList.add('hidden'); quizScreen.classList.remove('hidden'); resultScreen.classList.add('hidden'); currentQuestionIndex = 0; scores = { A: 0, B: 0, C: 0, D: 0 }; shuffledIndices = Array.from(Array(quizData.length).keys()); for (let i = shuffledIndices.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [shuffledIndices[i], shuffledIndices[j]] = [shuffledIndices[j], shuffledIndices[i]]; } showQuestion(); }
-        function showQuestion() { const container = document.getElementById('question-container'); container.classList.remove('fade-in'); void container.offsetWidth; container.classList.add('fade-in'); const questionIndex = shuffledIndices[currentQuestionIndex]; const question = quizData[questionIndex]; const shuffledAnswers = [...question.answers]; for (let i = shuffledAnswers.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [shuffledAnswers[i], shuffledAnswers[j]] = [shuffledAnswers[j], shuffledAnswers[i]]; } const progress = ((currentQuestionIndex) / quizData.length) * 100; progressBar.style.width = `${progress}%`; questionNumber.textContent = `Question ${currentQuestionIndex + 1}/${quizData.length}`; questionText.textContent = question.question; questionImage.src = question.image; answerButtons.innerHTML = ''; shuffledAnswers.forEach(answer => { const button = document.createElement('button'); button.innerHTML = answer.text; button.className = "w-full bg-gray-100 hover:bg-violet-100 text-slate-800 p-4 rounded-lg transition-all text-left border border-gray-200"; button.onclick = () => selectAnswer(answer.type); answerButtons.appendChild(button); }); }
-        function selectAnswer(type) { scores[type]++; currentQuestionIndex++; if (currentQuestionIndex < quizData.length) { showQuestion(); } else { showResult(); } }
-        function showResult() { quizScreen.classList.add('hidden'); resultScreen.classList.remove('hidden'); progressBar.style.width = '100%'; let maxScore = -1; let resultType = ''; let isTie = false; let tiedTypes = []; for (const type in scores) { if (scores[type] > maxScore) { maxScore = scores[type]; resultType = type; isTie = false; tiedTypes = [type]; } else if (scores[type] === maxScore) { isTie = true; tiedTypes.push(type); } } if (isTie) { resultType = tiedTypes[Math.floor(Math.random() * tiedTypes.length)]; } const result = resultsData[resultType]; resultImage.src = result.image; resultSubtitle.textContent = result.subtitle; resultMainTitle.textContent = result.mainTitle; resultDescription.textContent = result.description; resultCat.textContent = result.cat; dataLayer.push({'event': 'test_completed', 'result_type': result.mainTitle}); }
-        function retryQuiz() { resultScreen.classList.add('hidden'); startScreen.classList.remove('hidden'); startScreen.classList.add('fade-in'); }
+
+        let currentQuestionIndex = 0;
+        let scores = { A: 0, B: 0, C: 0, D: 0 };
+        let shuffledIndices = [];
+
+        function startQuiz() {
+            startScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            resultScreen.classList.add('hidden');
+            currentQuestionIndex = 0;
+            scores = { A: 0, B: 0, C: 0, D: 0 };
+            shuffledIndices = Array.from(Array(quizData.length).keys());
+            for (let i = shuffledIndices.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffledIndices[i], shuffledIndices[j]] = [shuffledIndices[j], shuffledIndices[i]];
+            }
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const container = document.getElementById('question-container');
+            container.classList.remove('fade-in');
+            void container.offsetWidth;
+            container.classList.add('fade-in');
+
+            const questionIndex = shuffledIndices[currentQuestionIndex];
+            const question = quizData[questionIndex];
+
+            const shuffledAnswers = [...question.answers];
+            for (let i = shuffledAnswers.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffledAnswers[i], shuffledAnswers[j]] = [shuffledAnswers[j], shuffledAnswers[i]];
+            }
+
+            const progress = ((currentQuestionIndex) / quizData.length) * 100;
+            progressBar.style.width = `${progress}%`;
+            questionNumber.textContent = `Question ${currentQuestionIndex + 1}/${quizData.length}`;
+            questionText.textContent = question.question;
+            questionImage.src = question.image;
+            answerButtons.innerHTML = '';
+
+            shuffledAnswers.forEach(answer => {
+                const button = document.createElement('button');
+                button.innerHTML = answer.text;
+                button.className = "w-full bg-gray-100 hover:bg-violet-100 text-slate-800 p-4 rounded-lg transition-all text-left border border-gray-200";
+                button.onclick = () => selectAnswer(answer.type);
+                answerButtons.appendChild(button);
+            });
+        }
+
+        function selectAnswer(type) {
+            scores[type]++;
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            quizScreen.classList.add('hidden');
+            resultScreen.classList.remove('hidden');
+            progressBar.style.width = '100%';
+
+            let maxScore = -1;
+            let resultType = '';
+            let isTie = false;
+            let tiedTypes = [];
+
+            for (const type in scores) {
+                if (scores[type] > maxScore) {
+                    maxScore = scores[type];
+                    resultType = type;
+                    isTie = false;
+                    tiedTypes = [type];
+                } else if (scores[type] === maxScore) {
+                    isTie = true;
+                    tiedTypes.push(type);
+                }
+            }
+            if (isTie) {
+                resultType = tiedTypes[Math.floor(Math.random() * tiedTypes.length)];
+            }
+
+            const result = resultsData[resultType];
+            resultImage.src = result.image;
+            resultSubtitle.textContent = result.subtitle;
+            resultMainTitle.textContent = result.mainTitle;
+            resultDescription.textContent = result.description;
+            resultCat.textContent = result.cat;
+            dataLayer.push({'event': 'test_completed', 'result_type': result.mainTitle});
+        }
+
+        function retryQuiz() {
+            resultScreen.classList.add('hidden');
+            startScreen.classList.remove('hidden');
+            startScreen.classList.add('fade-in');
+        }
         
-        // 이미지 로딩을 기다리는 안정적인 공유 기능
         async function shareResult() {
             dataLayer.push({ 'event': 'share_button_click' });
 
             const shareBtn = document.getElementById('share-btn');
-            const resultElement = document.getElementById('result-content');
+            const originalElement = document.getElementById('result-content');
             
             shareBtn.disabled = true;
             shareBtn.textContent = '이미지 생성 중...';
 
-            // 캡처 실행 함수 정의
-            const performCapture = () => {
-                window.scrollTo(0, 0); // 캡처 전 스크롤을 맨 위로 이동
+            try {
+                await document.fonts.ready;
+                const images = Array.from(originalElement.getElementsByTagName('img'));
+                await Promise.all(images.map(img => {
+                    if (img.complete) return Promise.resolve();
+                    return new Promise(resolve => { img.onload = img.onerror = resolve; });
+                }));
                 
-                // 렌더링을 위한 약간의 지연 시간 후 캡처 실행
-                setTimeout(() => {
-                    html2canvas(resultElement, {
-                        backgroundColor: "#ffffff",
-                        useCORS: true,
-                        scale: 1.5,
-                    }).then(canvas => {
-                        canvas.toBlob(async (blob) => {
-                            const file = new File([blob], "나의_집사유형_결과.png", { type: "image/png" });
-                            const shareData = {
-                                files: [file],
-                                title: '나의 매운맛 집사 유형은?',
-                                text: '과연 나는 어떤 유형의 집사일까? 지금 바로 확인해보세요!',
-                            };
-                            if (navigator.share && navigator.canShare(shareData)) {
-                                try {
-                                    await navigator.share(shareData);
-                                } catch (err) {
-                                    console.log('Share was cancelled', err);
-                                }
-                            } else {
-                                alert('공유 기능을 지원하지 않거나 HTTPS 환경이 아닙니다. 이미지를 다운로드합니다.');
-                                const imageURL = URL.createObjectURL(blob);
-                                const downloadLink = document.createElement('a');
-                                downloadLink.href = imageURL;
-                                downloadLink.download = '나의_집사유형_결과.png';
-                                document.body.appendChild(downloadLink);
-                                downloadLink.click();
-                                document.body.removeChild(downloadLink);
-                                URL.revokeObjectURL(imageURL);
-                            }
-                        }, 'image/png');
-                    }).catch(err => {
-                        console.error("이미지 생성 실패:", err);
-                        alert("이미지 생성에 실패했습니다. 다시 시도해주세요.");
-                    }).finally(() => {
-                        shareBtn.disabled = false;
-                        shareBtn.textContent = '인스타그램에 공유하기';
-                    });
-                }, 200); // 200ms 지연
-            };
+                window.scrollTo(0, 0);
 
-            const resultImgElement = document.getElementById('result-image');
-            // 결과 이미지가 이미 로드되었는지 확인
-            if (resultImgElement.complete && resultImgElement.naturalHeight !== 0) {
-                performCapture();
-            } else {
-                // 이미지가 아직 로드되지 않았다면, 로드가 끝날 때까지 기다림
-                resultImgElement.onload = performCapture;
-                resultImgElement.onerror = () => {
-                    console.error("결과 이미지를 불러오는데 실패했습니다.");
-                    alert("이미지 로딩에 실패하여 캡처할 수 없습니다.");
-                    shareBtn.disabled = false;
-                    shareBtn.textContent = '인스타그램에 공유하기';
+                const scale = 0.85;
+                const canvas = await html2canvas(originalElement, {
+                    backgroundColor: "#ffffff",
+                    useCORS: true,
+                    scale: window.devicePixelRatio * 1.5,
+                    onclone: (document, element) => {
+                        element.style.transform = `scale(${scale})`;
+                        element.style.transformOrigin = 'top left';
+                        const parent = element.parentElement;
+                        if (parent) {
+                           parent.style.width = `${element.offsetWidth}px`;
+                           parent.style.height = `${element.offsetHeight}px`;
+                        }
+                    }
+                });
+
+                const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+                const file = new File([blob], "나의_집사유형_결과.png", { type: "image/png" });
+                const shareData = {
+                    files: [file],
+                    title: '나의 매운맛 집사 유형은?',
+                    text: '과연 나는 어떤 유형의 집사일까? 지금 바로 확인해보세요!',
                 };
+
+                if (navigator.share && navigator.canShare(shareData)) {
+                    await navigator.share(shareData);
+                    return;
+                }
+                
+                if (navigator.clipboard && navigator.clipboard.write) {
+                    try {
+                        await navigator.clipboard.write([
+                            new ClipboardItem({ 'image/png': blob })
+                        ]);
+                        alert('결과 이미지가 클립보드에 복사되었어요! SNS에 바로 붙여넣기 해보세요.');
+                        return;
+                    } catch (clipError) {
+                        console.warn('클립보드 복사 실패:', clipError);
+                    }
+                }
+
+                const imageURL = URL.createObjectURL(blob);
+                const downloadLink = document.createElement('a');
+                downloadLink.href = imageURL;
+                downloadLink.download = '나의_집사유형_결과.png';
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+                URL.revokeObjectURL(imageURL);
+                alert('결과 이미지를 다운로드했습니다. 갤러리에서 확인 후 공유해주세요!');
+
+            } catch (err) {
+                console.error("이미지 생성 또는 공유 실패:", err);
+                if (err.name !== 'AbortError') {
+                    alert("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+                }
+            } finally {
+                shareBtn.disabled = false;
+                shareBtn.textContent = '결과 공유하기';
             }
         }
     </script>
